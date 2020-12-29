@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+  web:
+    build:
+       context: ./app
+       dockerfile: Dockerfile.prod
+    command: gunicorn django_project.wsgi:application --bind 0.0.0.0:8000
+    # Открываем порт 8000 наружу
+    expose:
+      - 8000
+    # Подключаем статические и медиа файлы
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+    env_file:
+      - ./.env.prod
+    # Дожидаемся запуска db
+    depends_on:
+      - db
+  db:
+    image: postgres:12.0-alpine
+    volumes:
+      - postgres_volume:/var/lib/postgresql/data/
+    env_file:
+      - ./.env.prod.db
+  nginx:
+    build: ./nginx
+    # Подключаем статические и медиа файлы
+    volumes:
+      - static_volume:/home/app/web/static
+      - media_volume:/home/app/web/media
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres_volume:
+  static_volume:
+  media_volume:
