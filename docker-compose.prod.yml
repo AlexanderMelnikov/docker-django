@@ -2,6 +2,7 @@ version: '3.8'
 
 services:
   web:
+    # Билд образа для продакшена
     build:
        context: ./app
        dockerfile: Dockerfile.prod
@@ -13,6 +14,8 @@ services:
     volumes:
       - static_volume:/home/app/web/static
       - media_volume:/home/app/web/media
+    # Файл с переменными, которые будут использоваться
+    # в основном в setting.py
     env_file:
       - ./.env.prod
     # Дожидаемся запуска db
@@ -20,8 +23,10 @@ services:
       - db
   db:
     image: postgres:12.0-alpine
+    # Том, куда будут сохранятся данные базы
     volumes:
       - postgres_volume:/var/lib/postgresql/data/
+    # Переменные, которые используются только postgre
     env_file:
       - ./.env.prod.db
   nginx:
@@ -30,6 +35,7 @@ services:
     volumes:
       - static_volume:/home/app/web/static
       - media_volume:/home/app/web/media
+    # Порт внешний/внутренний
     ports:
       - 1337:80
     depends_on:

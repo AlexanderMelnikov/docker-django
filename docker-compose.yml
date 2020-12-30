@@ -2,12 +2,14 @@ version: '3.8'
 
 services:
   web:
+    # Запуск образа для локальной разработки
     build: ./app
     command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - ./app/:/usr/src/app/
     ports:
       - 8000:8000
+    # Переменные, которые в основном будут использоваться в settings.py
     env_file:
       - ./.env.dev
   db:

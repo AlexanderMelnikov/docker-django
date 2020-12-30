@@ -21,11 +21,16 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
+# получаем ключ из глобального окружения (прописан в файле .env)
 SECRET_KEY = environ.get('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
+# Получем значение из глобального окружения либо
+# используем 0
 DEBUG = int(environ.get('DEBUG', default=0))
 
+# Ищем переменную в окружении содержащую список хостов
+# значение этой перменной раздляем используя пробел
 ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS').split(' ')
 
 
@@ -74,8 +79,12 @@ WSGI_APPLICATION = 'django_project.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/3.1/ref/settings/#databases
 
+# Настройки для базы данных
 DATABASES = {
     'default': {
+        # В случае, если в файле .env.prod или .env.dev были прописаны переменные
+        # будут использоваться они. Если переменной в окружении нет
+        # будет использоваться 2-ое значение
         'ENGINE': environ.get('POSTGRES_ENGINE', 'django.db.backends.sqlite3'),
         'NAME': environ.get('POSTGRES_DB', BASE_DIR / 'db.sqlite3'),
         'USER': environ.get('POSTGRES_USER', 'user'),
@@ -122,8 +131,10 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
+# То как статический файл будет отображаться в url
+# Пример /static/1.jpg
 STATIC_URL = "/static/"
-# По какому пути можно будет найти файлы
+# По какому пути можно будет найти файлы в каталоге
 STATIC_ROOT = BASE_DIR / "static"
 
 # Аналогично static файлам

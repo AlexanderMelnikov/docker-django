@@ -19,4 +19,5 @@ RUN pip install -r requirements.txt
 # копируем содержимое текущей папки в контейнер
 COPY . .
 
+# Запускаем скрипт с очисткой базы и миграциями
 ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
